@@ -1,3 +1,7 @@
+## Web 1
+1. Login had no sqli. using an object in password field, and passing any value to `$ne` and username as admin, we could login to the panel.
+2. Logs page reflected our user agent. Modifying the useragent in our requests to use `{{4*4}}` showed target was vulnerable to SSTI. We use it to run `ls` and then `cat data/flag.txt`.
+
 ## Web 2
 In this challenge, a web server issued a non-admin cookie on every fresh session. `/flag` endpoint needed admin cookie. Headers showed, the backend is go/fasthttp. An endpoint `/promote` could be identified with a bit of fuzzing. The problem is, that route was blocked, and just returned 403 forbidden. With a bit of OSINT on 403 html page, one could have identified that the proxy being used was Apache Traffic Server.
 
@@ -62,7 +66,7 @@ Since this attack was a bit complex, web 1 chain was kept open.
 
 
 ## Web 4
-Web 4 used same web ass as web 3, but flag was the username of admin-bot's account. This forces us to get an attack vector on given app only, since cookie is stored for `nft-app` host. First, use flask-unsign to bruteforce secret_key, which was `hello_world`. Set is_seller to True, making yourself a seller, then you can create products. The description of the product was unsanitized and the XSS sink.
+Web 4 used same web instance as web 3, but flag was the username of admin-bot's account. This forces us to get an attack vector on given app only, since cookie is stored for `nft-app` host. First, use flask-unsign to bruteforce secret_key, which was `hello_world`. Set is_seller to True, making yourself a seller, then you can create products. The description of the product was unsanitized and the XSS sink.
 
 The constraint was that CSP didn't allow any JS at all. And COOP header was set, so no leak through iframes. Styles were allowed, and flag was present in the `data-username` attribute of a span element. So we can apply styles based on some boolean check. But CSP didn't allow external images, so we couldn't have applied background image pointing to our webhook URL.
 
